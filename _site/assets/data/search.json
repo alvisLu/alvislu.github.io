@@ -1,0 +1,193 @@
+[
+  
+  {
+    "title"    : "Tmux-open 不能開啟指定路徑資料夾",
+    "category" : "",
+    "tags"     : " ArchLinux, tmux, xfce4, Thunar, FileManager",
+    "url"      : "/2018/10/25/tmux-open-cant-used-o.html",
+    "date"     : "October 25, 2018",
+    "excerpt"  : "某天在使用 tmux-open 要開啟指定路徑資料夾發現失敗了！\n圈選路徑後按 “o” 有看到資料夾閃了一下後，又關掉了。\n\n後來確認 tmux-open 的開啟網頁與編輯器的指令都沒有問題，就去看看 tmux-open 的 \nsource code 看看是用什麼指令開啟的。\n\n下面是擷取 tmux-open 的一小段原始編, 內容是說 OSX, Windows, Unix 下要使用什麼指\n令來開啟資料夾。我使用的 OS 是 Linux 就看 command_exists 裡面是什麼吧~\n...",
+  "content"  : "某天在使用 tmux-open 要開啟指定路徑資料夾發現失敗了！\n圈選路徑後按 “o” 有看到資料夾閃了一下後，又關掉了。\n\n後來確認 tmux-open 的開啟網頁與編輯器的指令都沒有問題，就去看看 tmux-open 的 \nsource code 看看是用什麼指令開啟的。\n\n下面是擷取 tmux-open 的一小段原始編, 內容是說 OSX, Windows, Unix 下要使用什麼指\n令來開啟資料夾。我使用的 OS 是 Linux 就看 command_exists 裡面是什麼吧~\n\ngenerate_open_command() {\n\tif is_osx; then\n\t\techo &quot;$(command_generator &quot;open&quot;)&quot;\n\telif is_cygwin; then\n\t\techo &quot;$(command_generator &quot;cygstart&quot;)&quot;\n\telif command_exists &quot;xdg-open&quot;; then\n\t\techo &quot;$(command_generator &quot;xdg-open&quot;)&quot;\n\telse\n\t\t# error command for Linux machines when &#39;xdg-open&#39; not installed\n\t\t&quot;$CURRENT_DIR/scripts/tmux_open_error_message.sh&quot; &quot;xdg-open&quot;\n\tfi\n    }\n\n\ncommand_exists 裡做了 echo &quot;$(command_generator &quot;xdg-open&quot;)&quot;。\n看到了，就是這個傢伙 xdg-open。\n\nPS: command_generator 這是 tmux-open 的內部函式。\n\n不知道它做什麼用的嗎？用 man xdg-open 看一下說明吧~\n\nXDG-OPEN(1)                      xdg-open Manual                      XDG-OPEN(1)\n\nNAME\n       xdg-open - opens a file or URL in the user&#39;s preferred application\n\nSYNOPSIS\n       xdg-open {file | URL}\n\n       xdg-open {--help | --manual | --version}\n\nDESCRIPTION\n       xdg-open opens a file or URL in the user&#39;s preferred application. If a URL\n       is provided the URL will be opened in the user&#39;s preferred web browser. If\n       a file is provided the file will be opened in the preferred application\n       for files of that type. xdg-open supports file, ftp, http and https URLs.\n\n       xdg-open is for use inside a desktop session only. It is not recommended\n       to use xdg-open as root.\n\n\n開頭就說了是 使用者開啟檔案與 URL 的首選。 那就不用懷疑了，就是 xdg-open \n它了。\n\n測試在 Terminal 使用 xdg-open 指令會有什麼結果。\n\n$: xdg-open /home\n\nThunar: Failed to initialize Xfconf: Server address of type unix was missing argument path or abstract\n\n\n(thunar:13812): GLib-GIO-CRITICAL **: 13:31:22.073: g_dbus_proxy_new_sync: assertion &#39;G_IS_DBUS_CONNECTION (connection)&#39; failed\n\n(thunar:13812): Gtk-WARNING **: 13:31:22.077: Theme directory actions32@2x of theme breeze-dark has no size field\n\n\n(thunar:13812): thunar-CRITICAL **: 13:31:22.157: Name &#39;org.xfce.FileManager&#39; lost on the message dbus, exiting.\nThunarThumbnailer: failed to create proxy: Error spawning command line “dbus-launch --autolaunch=99229b06b32148dc97431dc329152330 --binary-syntax --close-stderr”: Child process exited with coed\n\n\n恩… 我看不懂是什麼錯誤。只看出來錯誤是由 Thunar 檔案管理員發出的。\n就再使用 thunar 指令看看是不是由它送的。\n\n$: thunar /home\n\nThunar: Failed to initialize Xfconf: Server address of type unix was missing argument path or abstract\n\n\n(thunar:13812): GLib-GIO-CRITICAL **: 13:31:22.073: g_dbus_proxy_new_sync: assertion &#39;G_IS_DBUS_CONNECTION (connection)&#39; failed\n\n(thunar:13812): Gtk-WARNING **: 13:31:22.077: Theme directory actions32@2x of theme breeze-dark has no size field\n\n\n(thunar:13812): thunar-CRITICAL **: 13:31:22.157: Name &#39;org.xfce.FileManager&#39; lost on the message dbus, exiting.\nThunarThumbnailer: failed to create proxy: Error spawning command line “dbus-launch --autolaunch=99229b06b32148dc97431dc329152330 --binary-syntax --close-stderr”: Child process exited with coed\n\n\n一樣呢。但是什麼原因呢？把 error 丟到 Google 看看吧！\n\n奇怪，如果這指令不能開啟檔案那桌面上的圖示為什麼可以呢？(迷之音)\n\n後來在 [Bug 13884] New: thunar root - error 看到可以使用 gksu dbus-launch thunar 指令。\n就用 dbus-launch thunar 開看看。結果是…可以成功開啟！\n\nPS: gksu 是用來執行 GTK+ 圖行介面的 su 和 sudo。\n\n現在要將 Thunar 開啟方式改為 dbus-launch thunar 。\n\n我桌面環境使用 Xfce4。\n可以到 settings -&amp;gt; Preferred Application -&amp;gt; Utillties -&amp;gt; File Manager 修改\n。原先是使用 Thunar ，現在改為 dbus-launch thunar 。\n\n用 xdg-open 指令開啟檔案看看吧~ 終於可以成功開啟了！\n最重要 tmux-open 的快捷鍵，也可以開啟(撒花)。\n\n\n後記:\n\n後來想到之前安裝的 Docky 的垃圾桶圖示不能開啟 Thunar 的垃圾桶，會不會也是因為\nThunar 有問題開不啟來？就也去按按看，也可以成功開啟了！\n\n"
+} ,
+  
+  {
+    "title"    : "Fix grub on Ubuntu",
+    "category" : "",
+    "tags"     : " ArchLinux",
+    "url"      : "/2017/12/28/fix-grub.html",
+    "date"     : "December 28, 2017",
+    "excerpt"  : "如果開機時無正常登入，出現 grub 時，可能是 grub 出了問題！\n\n若是進入 grub rescue 可以依照以下步驟來修復。\n\n\n  查看現在有什麼分割區\n\n\ngrub rescue&amp;gt; ls\n\n## 輸出\n(hd0) (hd0,msdos2) (hd0,msdos1)\n\n\n\n\n  查看指定的分割區的 Filesystem type\n\n\ngrub rescue&amp;gt; ls (hd0,msdos1)\n\n## 輸出\n(hd0,msdos1): Filesystem is ext2...",
+  "content"  : "如果開機時無正常登入，出現 grub 時，可能是 grub 出了問題！\n\n若是進入 grub rescue 可以依照以下步驟來修復。\n\n\n  查看現在有什麼分割區\n\n\ngrub rescue&amp;gt; ls\n\n## 輸出\n(hd0) (hd0,msdos2) (hd0,msdos1)\n\n\n\n\n  查看指定的分割區的 Filesystem type\n\n\ngrub rescue&amp;gt; ls (hd0,msdos1)\n\n## 輸出\n(hd0,msdos1): Filesystem is ext2\n\n\n\n\n  指定分割區為 Booting\n\n\ngrub rescue&amp;gt; set root=(hd0,msdos1)\ngrub rescue&amp;gt; set prefix=(hd0,msdos1)/boot/grub\n\ninsmod normal\nnormal\n## 輸入 normal 後會進入開機清單\n\n\n\n  修復 grub\n\n\n# in the Terminal\n$: (sudo) update-grub\n\n## 輸出\nGenerating grub configuration file ...\nFound...\n...\ndone\n\n$: grub-install /dev/sda\n\n## 輸出\nInstalling for i386-pc platform.\nInstallation finished. No error reported.\n\n\nReference:\n\n  How to Rescue a Non-booting GRUB 2 on Linux\n\n\n"
+} ,
+  
+  {
+    "title"    : "在Linux下格式化隨身碟",
+    "category" : "",
+    "tags"     : " ArchLinux, usb",
+    "url"      : "/2017/11/13/format-usb.html",
+    "date"     : "November 13, 2017",
+    "excerpt"  : "介紹兩種在 Linux 下將 USB 格式化的方式，指令與 GParted 。\n\n指令方式\n\n\n  \n    開啟 Terminal，可使用快捷鍵 ctrl+alt+t。\n  \n  使用 lsblk 確認要格式化的隨身碟\n    $ lsblk\n    \n  \n  卸載要格式的隨身碟, 假設要格式化的隨身碟為 /dev/sdc1\n    $ umount /dev/sdc1\n    \n  \n  格式化為 ntfs。\n    $ sudo  mkfs.ntfs -L USB_NAME -f ...",
+  "content"  : "介紹兩種在 Linux 下將 USB 格式化的方式，指令與 GParted 。\n\n指令方式\n\n\n  \n    開啟 Terminal，可使用快捷鍵 ctrl+alt+t。\n  \n  使用 lsblk 確認要格式化的隨身碟\n    $ lsblk\n    \n  \n  卸載要格式的隨身碟, 假設要格式化的隨身碟為 /dev/sdc1\n    $ umount /dev/sdc1\n    \n  \n  格式化為 ntfs。\n    $ sudo  mkfs.ntfs -L USB_NAME -f /dev/sdd1\n// 或是格式化為 ext4\n$ sudo  mkfs.ext4 /dev/sdd1\n    \n    \n      -L 設定標籤名稱\n      -f 快速格式化\n    \n\n    要在 Windows 與 Linux 這兩個 OS 下可以讀取的話，格式必須使用 ntfs 。ext4 則是 Linux 的硬碟檔案格式。\n  \n  \n    退出隨身碟\n\n     $ sudo eject /dev/sdc1\n    \n  \n\n\nGParted\n\n\n  安裝 GParted 。\n    $ sudo apt-get install gparted\n    \n  \n  \n    開啟 GParted\n  \n  \n    刪除 /dev/sdc\n\n    \n      右上角 /dev/sdc(15.00GB) 可選擇要格式化的磁碟。\n      選擇好裝置後按 刪除。\n    \n\n    \n     \n \n  \n  \n    選擇未配置的區塊後，並新增區塊。\n\n    \n     \n \n\n    新增區塊\n\n    \n      File system 記得選擇 ntfs 。\n      Label 為 USB 的名稱設定。\n      New size 是設定區塊大小，沒有可變更的話可以不用修改 。\n    \n\n    \n     \n \n  \n  \n    按下 Add 後可看到新增的區塊。\n\n    \n     \n \n  \n  \n    也可以新增兩個區塊。\n\n    \n      完成後按下 Apply，若有配置錯誤可以按 Undo 回上一步。\n    \n\n    \n     \n \n  \n\n\n"
+} ,
+  
+  {
+    "title"    : "設定 tmux 使用 256 color",
+    "category" : "",
+    "tags"     : " tmux, ArchLinux",
+    "url"      : "/2017/11/09/tmux-using-256-color.html",
+    "date"     : "November 9, 2017",
+    "excerpt"  : "最近開始在使用 tmux，遇到了在 tmux 下使用 vim 會有顏色不對的問題。\n\n查看 ArchWiki-tmux 後，在 Setting the correct term 中有說明到可以在 home 目錄下新增 .tmux.conf 來修改設定。但還是一樣有問題，之後使用指令 tmux -2 強制 tmux 使用 256 color 就可行了。\n\n在 .bashrc 最下方加入\n\n# tmux\nalias tmux=&quot;tmux -2&quot;\n\n\n執 . ~/.basrc 後再啟動 tmux...",
+  "content"  : "最近開始在使用 tmux，遇到了在 tmux 下使用 vim 會有顏色不對的問題。\n\n查看 ArchWiki-tmux 後，在 Setting the correct term 中有說明到可以在 home 目錄下新增 .tmux.conf 來修改設定。但還是一樣有問題，之後使用指令 tmux -2 強制 tmux 使用 256 color 就可行了。\n\n在 .bashrc 最下方加入\n\n# tmux\nalias tmux=&quot;tmux -2&quot;\n\n\n執 . ~/.basrc 後再啟動 tmux 中的 vim 就可行了。\n"
+} ,
+  
+  {
+    "title"    : "vim map 使用說明與快捷鍵",
+    "category" : "",
+    "tags"     : " ArchLinux, vim",
+    "url"      : "/2017/09/13/vim-map-and-command.html",
+    "date"     : "September 13, 2017",
+    "excerpt"  : "vim map What is the difference between the remap, noremap, nnoremap and vnoremap mapping commands in vim?\n\nvim command Vim 快捷鍵\n\n",
+  "content"  : "vim map What is the difference between the remap, noremap, nnoremap and vnoremap mapping commands in vim?\n\nvim command Vim 快捷鍵\n\n"
+} ,
+  
+  {
+    "title"    : "在 Raspberry Pi2 上使用 Transmission 網頁版",
+    "category" : "",
+    "tags"     : " ArchLinux, Rpi2",
+    "url"      : "/2017/03/12/using-Transmission-web-on-Rpi2.html",
+    "date"     : "March 12, 2017",
+    "excerpt"  : "Transmission 是一個跨平台的 Bit Torrent 下載器，在許多的 Linux 發行版中都使用 Transmission。\n\n\n\n  OS: ArchLinux\n\n\n安裝 Transmission\n\nsudo pacman -Syu transmission-cli\n\n\n啟動 Transmission\nsudo systemctl enable transmission\nsudo systemctl start transmission\n\n\n建立存取路徑(用戶與群組設定)\n...",
+  "content"  : "Transmission 是一個跨平台的 Bit Torrent 下載器，在許多的 Linux 發行版中都使用 Transmission。\n\n\n\n  OS: ArchLinux\n\n\n安裝 Transmission\n\nsudo pacman -Syu transmission-cli\n\n\n啟動 Transmission\nsudo systemctl enable transmission\nsudo systemctl start transmission\n\n\n建立存取路徑(用戶與群組設定)\n\nsudo mkdir -p /mnt/data/torrents/{incomplete,complete,torrentfiles}\nsudo chown -R USER_NAME:transmission /mnt/data/torrents\nsudo chmod -R 775 /mnt/data/torrents\n\n\n配置設定檔\n在修改設定檔時需先將 transmission 關閉 sudo systemctl stop transmission。\n\n設定檔 sudo vim /var/lib/transmission/.config/transmission-daemon/settings.json,\n修改以下參數，rpc-whitelist&quot;: &quot;*.*.*.*&quot; 是不指定網頁版 IP 位置，若沒修改路徑，就不需修改其他的參數。\n\n\n  更多參數設定可以參考transmission github\n\n\n# From\n&quot;download-dir&quot;: &quot;/var/lib/transmission/Downloads&quot;,\n# To\n&quot;download-dir&quot;: &quot;/mnt/data/torrents/complete&quot;,\n\n# From:\n&quot;incomplete-dir&quot;: &quot;/var/lib/transmission/Downloads&quot;,\n# To\n&quot;incomplete-dir&quot;: &quot;/mnt/data/torrents/incomplete&quot;,\n\n# From\n&quot;incomplete-dir-enabled&quot;: false,\n# To\n&quot;incomplete-dir-enabled&quot;: true,\n\n# From\n&quot;rpc-whitelist&quot;: &quot;127.0.0.1&quot;,\n# To\n&quot;rpc-whitelist&quot;: &quot;*.*.*.*&quot;,\n\n\n開啟 transmission\n\n\n  網頁版 transmission: http://localhost:9091\n  若有使用 Avahi 設定可以輸入 HOSTNAME.local:9091\n\n\nAvahi 設定\n\n\n  ArchLinux\n  Xubuntu\n\n\n\n\nReference:\n\n  ArchLinux Wiki: Transmission\n  Transmission Web on a Raspberry Pi with Arch Linux\n\n"
+} ,
+  
+  {
+    "title"    : "ArchLinux 開機自動掛載",
+    "category" : "",
+    "tags"     : " ArchLinux, Rpi2",
+    "url"      : "/2017/03/12/Automount-file-in-ArchLinux.html",
+    "date"     : "March 12, 2017",
+    "excerpt"  : "fstab 可以用於定義硬碟分割區，遠端檔案或各種其他塊設備掛載到檔案系統中。\n\n使用方式\n\n設定檔在 /etc/fstab，以下是使用單個硬碟分割成三個分割區的範例。\n\n# &amp;lt;device&amp;gt;             &amp;lt;dir&amp;gt;         &amp;lt;type&amp;gt;    &amp;lt;options&amp;gt;             &amp;lt;dump&amp;gt; &amp;lt;fsck&amp;gt;\n/dev/sda1              /             ext4 ...",
+  "content"  : "fstab 可以用於定義硬碟分割區，遠端檔案或各種其他塊設備掛載到檔案系統中。\n\n使用方式\n\n設定檔在 /etc/fstab，以下是使用單個硬碟分割成三個分割區的範例。\n\n# &amp;lt;device&amp;gt;             &amp;lt;dir&amp;gt;         &amp;lt;type&amp;gt;    &amp;lt;options&amp;gt;             &amp;lt;dump&amp;gt; &amp;lt;fsck&amp;gt;\n/dev/sda1              /             ext4      defaults,noatime      0      1\n/dev/sda2              none          swap      defaults              0      0\n/dev/sda3              /home         ext4      defaults,noatime      0      2\n\n\n\n\n  &amp;lt;device&amp;gt;: 安裝的設備或遠端文件\n  &amp;lt;dir&amp;gt;: 安裝目錄\n   &amp;lt;type&amp;gt;: 檔案類型\n  &amp;lt;options&amp;gt;: 相關的裝載選項\n  &amp;lt;dump&amp;gt;: dump 實用程序檢查\n  &amp;lt;fsck&amp;gt;: 設置文件檢查的順序\n\n\n若要新增一個檔案類型為 ntfs 的設備，則在 /etc/fstab內加入\n\n注意：使用 ntfs 需先安裝 ntfs-3g\n\n/dev/sdb1    /mnt/media    ntfs    defaults,noatime    0    2\n\n\n\n\nReference:\n\n  ArchLinux Wiki: fstab\n  ArchLinux Wiki: ntfs\n\n"
+} ,
+  
+  {
+    "title"    : "在 Ubuntu 使用 update-rc.d 開機自動執行程式",
+    "category" : "",
+    "tags"     : " Linux, script",
+    "url"      : "/2017/02/24/using-update-rc.d-in-ubuntu.html",
+    "date"     : "February 24, 2017",
+    "excerpt"  : "OS: XUbuntu 14.10\n\n想在 Linux 環境下自動執行某些程式的話必須使用 daemon，這次要介紹的開機自動執行程式方式是使用 update-rd.d 。\n\n首先在 /etc/init.d/ 內新增一個 script。\n\n下面的 script 執行的內容是開機時 touch /var/lock/blah (開機候會在 /var/lock/ 加入一個 blah 空檔案。)\n\n#! /bin/sh\n### BEGIN INIT INFO\n# Provides:        ...",
+  "content"  : "OS: XUbuntu 14.10\n\n想在 Linux 環境下自動執行某些程式的話必須使用 daemon，這次要介紹的開機自動執行程式方式是使用 update-rd.d 。\n\n首先在 /etc/init.d/ 內新增一個 script。\n\n下面的 script 執行的內容是開機時 touch /var/lock/blah (開機候會在 /var/lock/ 加入一個 blah 空檔案。)\n\n#! /bin/sh\n### BEGIN INIT INFO\n# Provides:          blah\n# Required-Start:    $remote_fs $syslog\n# Required-Stop:     $remote_fs $syslog\n# Default-Start:     2 3 4 5\n# Default-Stop:      0 1 6\n# Short-Description: Example initscript\n# Description:       This file should be used to construct scripts to be\n#                    placed in /etc/init.d.\n### END INIT INFO\n \n# Some things that run always\ntouch /var/lock/blah\n \n# Carry out specific functions when asked to by the system\ncase &quot;$1&quot; in\n  start)\n    echo &quot;Starting script blah &quot;\n    echo &quot;Could do more here&quot;\n    ;;\n  stop)\n    echo &quot;Stopping script blah&quot;\n    echo &quot;Could do more here&quot;\n    ;;\n  *)\n    echo &quot;Usage: /etc/init.d/blah {start|stop}&quot;\n    exit 1\n    ;;\nesac\n \nexit 0\n\n\n修改腳本權限\n$ chmod 755 /etc/init.d/blah\n\n\n啟動 blah 腳本\nupdate-rc.d blah defaults\n\n\n關閉 blah 腳本\nupdate-rc.d -f blah remove\n\n\n"
+} 
+  
+  ,
+  
+  {
+  
+  "title"    : "Ninja",
+  "category" : "",
+  "tags"     : " Lorem",
+  "url"      : "/portfolio/ninja",
+  "date"     : "April 8, 2014",
+  "excerpt"  : "\n\nSed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem qu...",
+  "content"  : "\n\nSed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?\n\n"
+  
+} ,
+  
+  {
+  
+  "title"    : "Creative",
+  "category" : "",
+  "tags"     : " Ipsum",
+  "url"      : "/portfolio/safe",
+  "date"     : "August 16, 2014",
+  "excerpt"  : "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia...",
+  "content"  : "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?\nUse this area of the page to describe your project. The icon above is part of a free icon set by Flat Icons. On their website, you can download their free set with 16 icons, or you can purchase the entire set with 146 icons for only $12!\n"
+  
+} ,
+  
+  {
+  
+  "title"    : "Circus",
+  "category" : "",
+  "tags"     : " Ipsum",
+  "url"      : "/portfolio/circus",
+  "date"     : "September 1, 2014",
+  "excerpt"  : "\n\nSed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem qu...",
+  "content"  : "\n\nSed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?\n\n"
+  
+} ,
+  
+  {
+  
+  "title"    : "Tower of Hanoi",
+  "category" : "",
+  "tags"     : " ",
+  "url"      : "/portfolio/hanoi",
+  "date"     : "September 1, 2014",
+  "excerpt"  : "\n\nSed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem qu...",
+  "content"  : "\n\nSed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?\n\n"
+  
+} ,
+  
+  {
+  
+  "title"    : "Tic tac toe",
+  "category" : "",
+  "tags"     : " ",
+  "url"      : "/portfolio/tictactoe",
+  "date"     : "September 1, 2014",
+  "excerpt"  : "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia...",
+  "content"  : "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?\n\n"
+  
+} ,
+  
+  {
+  
+  "title"    : "Cake",
+  "category" : "",
+  "tags"     : " Lorem, Ipsum, Portfolio",
+  "url"      : "/portfolio/cake",
+  "date"     : "September 27, 2015",
+  "excerpt"  : "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia...",
+  "content"  : "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?\nUse this area of the page to describe your project. The icon above is part of a free icon set by Flat Icons. On their website, you can download their free set with 16 icons, or you can purchase the entire set with 146 icons for only $12!\n"
+  
+} ,
+  
+  {
+  
+  "title"    : "Jekyll",
+  "category" : "",
+  "tags"     : " ",
+  "url"      : "/portfolio/jekyllblog",
+  "date"     : "May 26, 2017",
+  "excerpt"  : "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia...",
+  "content"  : "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?\n\n"
+  
+} ,
+  
+  {
+  
+  "title"    : "Lorem Ipsum",
+  "category" : "",
+  "tags"     : " ",
+  "url"      : "/portfolio/submarine",
+  "date"     : "September 3, 2017",
+  "excerpt"  : "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia...",
+  "content"  : "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?\nUse this area of the page to describe your project. The icon above is part of a free icon set by Flat Icons. On their website, you can download their free set with 16 icons, or you can purchase the entire set with 146 icons for only $12!\n\n"
+  
+} ,
+  
+  {
+  
+  "title"    : "Github",
+  "category" : "",
+  "tags"     : " Lorem, Portfolio",
+  "url"      : "/portfolio/gitlecture",
+  "date"     : "October 20, 2017",
+  "excerpt"  : "\n\nSed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem qu...",
+  "content"  : "\n\nSed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?\n\n"
+  
+} 
+  
+]

@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <!-- Main JS (navbar.js, katex_init.js and masonry_init.js)-->
+    <script defer=true src="/assets/js/main.min.js"></script>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="/assets/css/main.css">
+
+    <!--Favicon-->
+    <link rel="shortcut icon" href="/assets/favicon.ico" type="image/x-icon">
+
+    <!-- Canonical -->
+    <link rel="canonical" href="http://localhost:4000/2017/03/12/using-Transmission-web-on-Rpi2.html">
+
+    <!-- RSS -->
+    <link rel="alternate" type="application/atom+xml" title="Alvis's Blog" href="http://localhost:4000/feed.xml"/>
+    
+    
+
+    <!-- KaTeX 0.8.3 -->
+    <!-- if you have any issue check https://github.com/KaTeX/KaTeX -->
+    
+    <script src="/assets/js/vendor/katex.min.js"></script>
+    
+
+    <!-- Google Analytics -->
+     <!-- End Google Analytics -->
+
+    <!-- seo tags -->
+    <!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>在 Raspberry Pi2 上使用 Transmission 網頁版 | Alvis’s Blog</title>
+<meta name="generator" content="Jekyll v3.8.6" />
+<meta property="og:title" content="在 Raspberry Pi2 上使用 Transmission 網頁版" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Transmission 是一個跨平台的 Bit Torrent 下載器，在許多的 Linux 發行版中都使用 Transmission。" />
+<meta property="og:description" content="Transmission 是一個跨平台的 Bit Torrent 下載器，在許多的 Linux 發行版中都使用 Transmission。" />
+<link rel="canonical" href="http://localhost:4000/2017/03/12/using-Transmission-web-on-Rpi2.html" />
+<meta property="og:url" content="http://localhost:4000/2017/03/12/using-Transmission-web-on-Rpi2.html" />
+<meta property="og:site_name" content="Alvis’s Blog" />
+<meta property="og:image" content="http://localhost:4000/assets/img/triangle.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2017-03-12T00:00:00+08:00" />
+<script type="application/ld+json">
+{"description":"Transmission 是一個跨平台的 Bit Torrent 下載器，在許多的 Linux 發行版中都使用 Transmission。","headline":"在 Raspberry Pi2 上使用 Transmission 網頁版","dateModified":"2017-03-12T00:00:00+08:00","datePublished":"2017-03-12T00:00:00+08:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2017/03/12/using-Transmission-web-on-Rpi2.html"},"@type":"BlogPosting","url":"http://localhost:4000/2017/03/12/using-Transmission-web-on-Rpi2.html","image":"http://localhost:4000/assets/img/triangle.png","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <!-- Manual seo tags -->
+    <!--
+    <title>在 Raspberry Pi2 上使用 Transmission 網頁版 | Alvis's Blog</title>
+    <meta name="description" content="Transmission 是一個跨平台的 Bit Torrent 下載器，在許多的 Linux 發行版中都使用 Transmission。">
+    -->
+</head>
+
+  <body>
+    <header class="site-header">
+
+    <!-- Logo and title -->
+	<div class="branding">
+        
+		<a href="/">
+			<img alt="logo img" class="avatar" src="/assets/img/triangle.png" />
+		</a>
+        
+
+		<h1 class="site-title">
+			<a aria-label="Alvis's Blog" href="/">
+        Alvis's Blog
+      </a>
+		</h1>
+	</div>
+
+    <!-- Toggle menu -->
+    <nav class="clear">
+    <a aria-label="pull" id="pull" class="toggle" href="#">
+    <i class="fa fa-bars fa-lg"></i>
+    </a>
+
+    <!-- Menu -->
+    <ul class="hide">
+        
+
+        
+            
+            
+        
+            
+            <li class="separator"> | </li>
+            <li>
+                <a class="clear" aria-label="About" title="About" href="/about/">
+                     About 
+                </a>
+            </li>
+            
+            
+        
+            
+            <li class="separator"> | </li>
+            <li>
+                <a class="clear" aria-label="Gallery" title="Gallery" href="/gallery/">
+                     Gallery 
+                </a>
+            </li>
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            <li class="separator"> | </li>
+            <li>
+                <a class="clear" aria-label="Portfolio" title="Portfolio" href="/portfolio/">
+                     Portfolio 
+                </a>
+            </li>
+            
+            
+        
+            
+            
+        
+            
+            <li class="separator"> | </li>
+            <li>
+                <a class="clear" aria-label="Search" title="Search" href="/search/">
+                     <i class="fa fa-search" aria-hidden="true"></i>
+                    
+                </a>
+            </li>
+            
+            
+        
+            
+            <li class="separator"> | </li>
+            <li>
+                <a class="clear" aria-label="Tags" title="Tags" href="/tags/">
+                     <i class="fa fa-tags" aria-hidden="true"></i>
+                    
+                </a>
+            </li>
+            
+            
+        
+            
+            
+        
+            
+            
+        
+    </ul>
+
+	</nav>
+</header>
+
+    <div class="content">
+      
+
+<meta property="og:url"          content="/2017/03/12/using-Transmission-web-on-Rpi2.html" />
+<meta property="og:type"         content="article" />
+<meta property="og:title"        content="在 Raspberry Pi2 上使用 Transmission 網頁版" />
+<meta property="og:description"  content="Transmission 是一個跨平台的 Bit Torrent 下載器，在許多的 Linux 發行版中都使用 Transmission。
+
+" />
+<meta property="og:image"        content="assets/img/pexels/triangular.jpeg" />
+
+
+<article >
+  <header id="main" style="">
+    
+      <h1 id="%E5%9C%A8+Raspberry+Pi2+%E4%B8%8A%E4%BD%BF%E7%94%A8+Transmission+%E7%B6%B2%E9%A0%81%E7%89%88" class="title">在 Raspberry Pi2 上使用 Transmission 網頁版</h1>
+      
+
+<div class="post-info">
+    <p class="meta">
+      March 12, 2017
+    </p></div>
+
+    
+  </header>
+  <section class="post-content">
+  
+      <p>Transmission 是一個跨平台的 Bit Torrent 下載器，在許多的 Linux 發行版中都使用 Transmission。</p>
+
+<div style="
+border: 2px solid #faebcc;
+border-radius: 5px;
+background-color:#fcf8e3;
+color:#8a6d3b;
+padding: 1px 5px 1px 5px;">
+
+  <b>OS: ArchLinux</b>
+</div>
+
+<h3 id="安裝-transmission">安裝 Transmission</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo pacman -Syu transmission-cli
+</code></pre></div></div>
+
+<h3 id="啟動-transmission">啟動 Transmission</h3>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo systemctl enable transmission
+sudo systemctl start transmission
+</code></pre></div></div>
+
+<h3 id="建立存取路徑用戶與群組設定">建立存取路徑(用戶與群組設定)</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo mkdir -p /mnt/data/torrents/{incomplete,complete,torrentfiles}
+sudo chown -R USER_NAME:transmission /mnt/data/torrents
+sudo chmod -R 775 /mnt/data/torrents
+</code></pre></div></div>
+
+<h3 id="配置設定檔">配置設定檔</h3>
+<p><strong>在修改設定檔時需先將 transmission 關閉</strong> <code class="highlighter-rouge">sudo systemctl stop transmission</code>。</p>
+
+<p>設定檔 <code class="highlighter-rouge">sudo vim /var/lib/transmission/.config/transmission-daemon/settings.json</code>,
+修改以下參數，<code class="highlighter-rouge">rpc-whitelist": "*.*.*.*"</code> 是不指定網頁版 IP 位置，若沒修改路徑，就不需修改其他的參數。</p>
+
+<ul>
+  <li>更多參數設定可以參考<a href="https://github.com/transmission/transmission/wiki/Editing-Configuration-Files">transmission github</a></li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># From
+"download-dir": "/var/lib/transmission/Downloads",
+# To
+"download-dir": "/mnt/data/torrents/complete",
+
+# From:
+"incomplete-dir": "/var/lib/transmission/Downloads",
+# To
+"incomplete-dir": "/mnt/data/torrents/incomplete",
+
+# From
+"incomplete-dir-enabled": false,
+# To
+"incomplete-dir-enabled": true,
+
+# From
+"rpc-whitelist": "127.0.0.1",
+# To
+"rpc-whitelist": "*.*.*.*",
+</code></pre></div></div>
+
+<h3 id="開啟-transmission">開啟 transmission</h3>
+
+<ul>
+  <li>網頁版 transmission: <a href="http://localhost:9091">http://localhost:9091</a></li>
+  <li>若有使用 Avahi 設定可以輸入 <a href="hostname.local:9091">HOSTNAME.local:9091</a></li>
+</ul>
+
+<h4 id="avahi-設定">Avahi 設定</h4>
+
+<ol>
+  <li><a href="./2017-03-12-using-avahi-in-ArchLinux.1.md">ArchLinux</a></li>
+  <li><a href="./2017-02-20-using-avahi-in-ubuntu.md">Xubuntu</a></li>
+</ol>
+
+<hr />
+
+<p>Reference:</p>
+<ul>
+  <li><a href="https://wiki.archlinux.org/index.php/Transmission">ArchLinux Wiki: Transmission</a></li>
+  <li><a href="https://raymii.org/s/blog/Transmission-Raspberry-Pi-Arch-Linux.html">Transmission Web on a Raspberry Pi with Arch Linux</a></li>
+</ul>
+
+    
+  </section>
+
+  <!-- Social media shares -->
+  <div class="share-buttons">
+    <ul class="share-buttons">
+        <div class="meta">Share</div>
+        
+        <li>
+            <a href="https://www.facebook.com/sharer/sharer.php?u=http://localhost:4000/2017/03/12/using-Transmission-web-on-Rpi2.html" target="_blank" title="Share on Facebook">
+			<i class="fa fa-facebook-square fa-2x" aria-hidden="true"></i>
+			<span class="sr-only">Share on Facebook</span>
+		</a>
+        </li>
+         
+        <li>
+            <a href="https://twitter.com/intent/tweet?source=http://localhost:4000/2017/03/12/using-Transmission-web-on-Rpi2.html&text=%E5%9C%A8+Raspberry+Pi2+%E4%B8%8A%E4%BD%BF%E7%94%A8+Transmission+%E7%B6%B2%E9%A0%81%E7%89%88%20%7C%20Alvis%27s+Blog:%20http://localhost:4000/2017/03/12/using-Transmission-web-on-Rpi2.html" target="_blank" title="Tweet">
+			<i class="fa fa-twitter-square fa-2x" aria-hidden="true"></i>
+			<span class="sr-only">Tweet</span>
+		</a>
+        </li>
+            
+        <li>
+            <a href="http://www.reddit.com/submit?url=http://localhost:4000/2017/03/12/using-Transmission-web-on-Rpi2.html&title=%E5%9C%A8+Raspberry+Pi2+%E4%B8%8A%E4%BD%BF%E7%94%A8+Transmission+%E7%B6%B2%E9%A0%81%E7%89%88%20%7C%20Alvis%27s+Blog" target="_blank" title="Share on Reddit">
+			<i class="fa fa-reddit-square fa-2x" aria-hidden="true"></i>
+			<span class="sr-only">Share on Reddit</span>
+		</a>
+        </li>
+           
+        <li>
+            <a href="mailto:?subject=%E5%9C%A8+Raspberry+Pi2+%E4%B8%8A%E4%BD%BF%E7%94%A8+Transmission+%E7%B6%B2%E9%A0%81%E7%89%88%20%7C%20Alvis%27s+Blog&body=:%20http://localhost:4000/2017/03/12/using-Transmission-web-on-Rpi2.html" target="_blank" title="Email">
+			<i class="fa fa-envelope-square fa-2x" aria-hidden="true"></i>
+			<span class="sr-only">Email</span>
+		</a>
+        </li>
+        
+    </ul>
+</div>
+
+
+   <!-- Tag list -->
+  
+  
+
+
+<footer>
+  <div class="tag-list">
+    
+      <div class="meta">Tags</div>
+    
+
+    
+    <a class="button" href="/tags#ArchLinux">
+      <p><i class="fa fa-tag fa-fw"></i> ArchLinux</p>
+    </a>
+    
+    <a class="button" href="/tags#Rpi2">
+      <p><i class="fa fa-tag fa-fw"></i> Rpi2</p>
+    </a>
+    
+  </div>
+</footer>
+
+
+</article>
+
+<!-- Disqus -->
+
+<div class="comments">
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+	var disqus_shortname = 'alvisLu';
+	(function() {
+		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+</script>
+<noscript>Please enable JavaScript to view comments.</noscript>
+
+</div>
+
+
+<!-- Post navigation -->
+
+  <div id="post-nav">
+    
+    <div id="previous-post">
+        <a alt="vim map 使用說明與快捷鍵" href="/2017/09/13/vim-map-and-command.html">
+            <p>Previous post</p>
+            vim map 使用說明與快捷鍵
+        </a>
+    </div>
+    
+
+    
+    <div id="next-post">
+        <a alt="ArchLinux 開機自動掛載" href="/2017/03/12/Automount-file-in-ArchLinux.html">
+            <p>Next post</p>
+            ArchLinux 開機自動掛載
+        </a>
+    </div>
+    
+</div>
+
+
+
+<!-- To change color of links in the page -->
+<style>
+  
+
+  header#main {
+    background-repeat:no-repeat;
+    
+  }
+</style>
+
+    </div>
+    <footer class="site-footer">
+    <p class="text">
+        Powered by <a href="https://jekyllrb.com/">Jekyll</a> with <a href="https://github.com/sylhare/Type-on-Strap">Type on Strap</a>
+</p>
+            <div class="footer-icons">
+                <ul>
+                <!-- Social icons from Font Awesome, if enabled -->
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li>
+	<a href="https://github.com/alvisLu" title="Follow on GitHub">
+		<span class="fa-stack fa-lg">
+            <i class="fa fa-circle fa-stack-2x"></i>
+            <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+        </span>
+	</a>
+</li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                </ul>
+            </div>
+</footer>
+
+
+
+  </body>
+</html>
