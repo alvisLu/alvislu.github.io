@@ -7,7 +7,7 @@ tags: [ArchLinux, tmux, xfce4, Thunar, FileManager]
 某天在使用 `tmux-open` 要開啟指定路徑資料夾發現失敗了！
 圈選路徑後按 "o" 有看到資料夾閃了一下後，又關掉了。
 
-後來確認 tmux-open 的開啟網頁與編輯器的指令都沒有問題，就去看看 tmux-open 的 
+後來確認 tmux-open 的開啟網頁與編輯器的指令都沒有問題，就去看看 tmux-open 的
 source code 看看是用什麼指令開啟的。
 
 下面是擷取 `tmux-open` 的一小段原始編, 內容是說 OSX, Windows, Unix 下要使用什麼指

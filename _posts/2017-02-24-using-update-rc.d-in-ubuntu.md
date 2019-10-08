@@ -6,11 +6,11 @@ tags: [Linux, script]
 
 `OS: XUbuntu 14.10`
 
-想在 Linux 環境下自動執行某些程式的話必須使用 daemon，這次要介紹的開機自動執行程式方式是使用 `update-rd.d` 。
+在 Linux 環境下自動執行某些程式的話必須使用 daemon，可以使用 `update-rd.d` 開機自動執行程式。
 
-首先在 /etc/init.d/ 內新增一個 script。
+首先在 `/etc/init.d/` 內新增一個 script。
 
-下面的 script 執行的內容是開機時 touch /var/lock/blah (開機候會在 /var/lock/ 加入一個 blah 空檔案。)
+以下 script 執行的內容是開機時 touch /var/lock/blah (開機候會在 /var/lock/ 加入一個 blah 空檔案。)
 
 ```
 #! /bin/sh
@@ -43,21 +43,34 @@ case "$1" in
     exit 1
     ;;
 esac
- 
+
 exit 0
 ```
 
-### 修改腳本權限
+__修改腳本權限成可執行__
+
 ```
 $ chmod 755 /etc/init.d/blah
 ```
 
-### 啟動 blah 腳本
+__啟動 blah 腳本__
 ```
 update-rc.d blah defaults
+
+或是
+
+update-rc.d blah start 2 3 4 5 stop 0 1 6
 ```
 
-### 關閉 blah 腳本
+- start 使用的模式
+    - 2~5：多使用者模式，4：圖型化模式。
+- stop 使用的模式
+    - 0：關機模式。
+    - 1：單一使用者模式。
+    - 6：系統重啟模式。
+
+
+__關閉 blah 腳本__
 ```
 update-rc.d -f blah remove
 ```
