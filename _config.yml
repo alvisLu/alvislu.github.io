@@ -18,7 +18,7 @@ theme_settings:
   favicon: assets/favicon.ico
 
   # Header and footer text
-  header_text: Alvis's Blog
+  header_text:  C'est la vie
   header_feature_image: assets/img/pexels/triangular.jpeg
   footer_text: >
     Powered by <a href="https://jekyllrb.com/">Jekyll</a> with <a href="https://github.com/sylhare/Type-on-Strap">Type on Strap</a>
@@ -102,7 +102,7 @@ authors:
 # PORTFOLIO
 collections:
   portfolio:
-    output: true
+    output: false
     permalink: /:collection/:name
 
 # BUILD SETTINGS
