@@ -1,13 +1,7 @@
 ---
 layout: post
 title: 在 Ubuntu 使用 Avahi
-categories:
-  - 
-tags:
-  - Linux
-  - ArchLinux
-  - Rpi2
-
+tags: [ Linux, Rpi2]
 ---
 
 Avahi 是一個實現零配置網絡（zeroconf）的軟體，如果想在區域網路進行類似網芳的搜尋，可以使用 avahi-daemon。
@@ -97,9 +91,3 @@ sudo update-rc.d -f avahi-daemon remove
 -f : 強制刪除 
 
 
-
----
-
-Reference:
-* []()
-* []()
