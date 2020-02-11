@@ -1,15 +1,15 @@
 ---
 layout: post
-title: Docker 說明
+title: Docker 指令紀錄
 categories:
 tags:
   - Tricks
   - Linux
 ---
 
-這裡不會說明 `Docker` 是什麼，有什麼特色。只是單純記錄我學習到 `Docker` 的一些指令。
+以下不會說明 `Docker` 是什麼，有什麼特色。只是單純記錄我學習到 `Docker` 的一些指令。
 
-## Local user 加入到 Docker 的群組下
+## Host user 加入到 Docker 的群組下
 
 加入 `docker` 的群組: `$ sudo usermod -aG docker <user-name>`
 
@@ -81,16 +81,16 @@ $ docker exec -it ubuntu_test bash
 $ docker exec -itu ubuntu ubuntu_test bash
 ```
 
-__PS:__ 指定使用者登入容器需先在容器內創建使用，可參考 [如何創建使用者](# 如何創建使用者)
+__PS:__ 指定使用者登入容器需先在容器內創建使用者，可參考以下的 [如何創建使用者](#如何創建使用者)
 
 ### Volume
 
-`volume` 指令可以讓 `docker` 與 `HOST` 共同目錄。
+`volume` 指令可以讓 `docker` 與 `HOST` 產生共同目錄。
 
 * 創建 volume: `$ docker volume create <volume-name>`
 * 刪除 volume: `$ docker volume rm <volume-name>`
 
-`HOST` 下的共同目錄位置: `/var/lib/docker/volumes/<volume-name>`
+與 `HOST` 共同目錄位置: `/var/lib/docker/volumes/<volume-name>`
 
 
 __Host Volume__
@@ -105,6 +105,9 @@ docker run -it --name ubuntu -v ~/workspace:/home/ubuntu/share ubuntu bash
 
 __WORKDIR__
 
+可以使用 
+
+
 使用 `exec` 指定登入的工作路徑: `$ docker exec -it -w <container-workdir> <container-name> <command>`
 
 * `-w`: 指定登入 `docker` 內的工作路徑。
@@ -114,7 +117,7 @@ $ docker exec -itw /home/ubuntu/share ubuntu bash
 ```
 
 
-### 輸出與輸入 image (export, import)
+### 輸出與輸入映像檔 (export, import)
 
 __export__
 
@@ -183,13 +186,13 @@ $ ls -l /etc/sudoers
 -r--r----- 1 root root     780 Feb 11 02:49 sudoers
 # -r--r----- => 這時只有 root 與 root 的群組可以唯讀
 
-# 修改 /etc/sudoers 檔權成可以讓 `root` 有寫入功能
+# 修改 /etc/sudoers 檔案權限可以讓 `root` 有寫入功能
 $ chmod 640 /etc/sudoers
 
 # 查看 /etc/sudoers 的權限
 $ ls -l /etc/sudoers
 -rw-r----- 1 root root     780 Feb 11 02:49 sudoers
-# -rw-r----- => 這時就能修改 /etc/sudoers ，加入使用者
+# -rw-r----- => 這時就能修改 /etc/sudoers，加入使用者
 
 # 記得加入完後也要將檔案的權限改回來
 $ chmod 440 /etc/sudoers
