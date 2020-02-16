@@ -7,7 +7,7 @@ tags:
   - Linux
 ---
 
-以下不會說明 `Docker` 是什麼，有什麼特色。只是單純記錄我學習到 `Docker` 的一些指令。
+本篇不會說明 `Docker` 是什麼，有什麼特色。只是單純記錄我學習到 `Docker` 的一些指令。
 
 ## Host user 加入到 Docker 的群組下
 
@@ -117,7 +117,7 @@ $ docker exec -itw /home/ubuntu/share ubuntu bash
 ```
 
 
-### 輸出與輸入映像檔 (export, import)
+### 輸出與輸入 image (export, import)
 
 __export__
 
@@ -186,13 +186,13 @@ $ ls -l /etc/sudoers
 -r--r----- 1 root root     780 Feb 11 02:49 sudoers
 # -r--r----- => 這時只有 root 與 root 的群組可以唯讀
 
-# 修改 /etc/sudoers 檔案權限可以讓 `root` 有寫入功能
+# 修改 /etc/sudoers 檔權成可以讓 `root` 有寫入功能
 $ chmod 640 /etc/sudoers
 
 # 查看 /etc/sudoers 的權限
 $ ls -l /etc/sudoers
 -rw-r----- 1 root root     780 Feb 11 02:49 sudoers
-# -rw-r----- => 這時就能修改 /etc/sudoers，加入使用者
+# -rw-r----- => 這時就能修改 /etc/sudoers ，加入使用者
 
 # 記得加入完後也要將檔案的權限改回來
 $ chmod 440 /etc/sudoers
