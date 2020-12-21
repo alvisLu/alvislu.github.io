@@ -2,8 +2,7 @@
 layout: post
 title: Linked List 鏈結串列
 categories:
-tags:
-  - Linked List, Data Structure
+tags: [Linked List, Data Structure]
 ---
 
 Linked List (連結串列) 是一種動態的資料結構，不會按照順序儲存資料，而是在每個節點 `Node` 記錄資料 `value` 與下個節點的位置 `next`。
@@ -71,7 +70,9 @@ class LinkedList {
 }
 ```
 
-### 新增 `append()`
+以上就完成了 `LinkedList` 的結構。接著就來實現一些應用。
+
+__新增 `append()`__
 
 在 `LinkedList` 資料的結尾新增一筆 `Node`，並回傳新增後的 `list`。
 
@@ -98,7 +99,7 @@ class LinkedList {
   }
 ```
 
-### 刪除 `remove()`
+__刪除 `remove()`__
 
 檢查 `index` 是否在範圍內，在範圍內才可做刪除的動做。
 
