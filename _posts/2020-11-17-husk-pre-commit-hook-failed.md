@@ -10,7 +10,7 @@ husky > pre-commit hook failed (add --no-verify to bypass)
 ```
 
 解決有兩種方式
-1. commit 時加上 `--no-verify` 參數繞過 `.git/hook` 的 ` pre-commit` 和 `commit-msg`:
+1. commit 時加上 `--no-verify` 參數繞過 `.git/hook` 的 `pre-commit` 和 `commit-msg`:
 ```
 git commit -m "xxx"   git commit --no-verify -m "XXX" **
 ```
