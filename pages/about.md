@@ -31,7 +31,7 @@ Outo 奧拓戶外活動平台後端
 <h3 style="display: inline;">動程科技股份有限公 - 軟體整合工程師 </h3>
 <h4 style="display: inline; color: grey;">(Dec 2015 ~ Jan 2020)</h4>
 雲資料庫後台網頁
-- 使用 React.js 設計與實做雲資料庫後台網頁。
+- 使用 React.js, Redux, React-Hook, Material-UI 設計與實做雲資料庫後台網頁。
 
 新一代工業加工機
 - 使用 React.js 設計與實做網頁式人機。
@@ -58,7 +58,7 @@ IoT 系統整合
 <h2>Education</h2>
 <hr style="border: 1px solid gray">
 
-<h3 style="display: inline;">雲林科技大學 - 碩士, 機械工程 (Measurement Lab)</h3>
+<h3 style="display: inline;">雲林科技大學 - 碩士, 機械工程 <i>Measurement Lab</i> </h3>
 <h4 style="display: inline; color: grey;">(Jul 2013 ~ Aug 2015)</h4>
 
 論文: [光學雷達導引之智慧型自主式車輛研究](https://github.com/alvisLu/MasterThesis/blob/master/Thesis.pdf), [Demo](https://www.youtube.com/watch?v=pt9jC4an-Gk&ab_channel=bnxxA)
@@ -76,7 +76,7 @@ IoT 系統整合
 
 <div style="display: -webkit-flex; justify-content: space-between;">
   <div style="display: inline-block;">
-    <h4>{ Programming Languages }</h4>
+    <h4>Programming Languages</h4>
     <ul>
       <li>JavaScript</li>
       <li>TypeScript</li>
@@ -86,23 +86,24 @@ IoT 系統整合
   </div>
 
   <div style="display: inline-block;">
-    <h4>{ Full-End Skill }</h4>
+    <h4>Full-Stack Skill</h4>
     <ul>
       <li>Node.js</li>
       <li>React.js/Redux</li>
       <li>React-Hook</li>
       <li>Vue.js/Vuex</li>
-      <li>RESTful/GraphQL</li>
       <li>MySQL/MongoDB</li>
+      <li>RESTful/GraphQL</li>
+      <li>Flask-RESTful</li>
     </ul>
   </div>
 
   <div style="display: inline-block;">
-    <h4>{ Development Environment }</h4>
+    <h4>Development Environment</h4>
     <ul>
       <li>ArchLinux/Ubuntu</li>
       <li>Git</li>
-      <li>Docker, LXC/LXD</li>
+      <li>Docker</li>
       <li>AWS</li>
     </ul>
   </div>
