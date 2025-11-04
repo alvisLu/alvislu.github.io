@@ -19,11 +19,11 @@ export default function Page() {
       <div className="divide-y divide-gray-200 dark:divide-gray-700">
         <div className="space-y-2  pt-6 md:space-y-5">
           <h2 className="text-xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-2xl sm:leading-10 md:text-4xl md:leading-14">
-            EMPLOYMENT
+            {resume.employment.label}
           </h2>
         </div>
         <div className="space-y-2 pt-6 md:space-y-5">
-          {resume.employment.map((e) => (
+          {resume.employment.datas.map((e) => (
             <div key={e.company}>
               <div className="flex flex-col items-center justify-between md:grid-cols-3 md:flex-row">
                 <p className="text-base font-bold leading-7 md:text-lg ">{e.position}</p>
@@ -59,25 +59,27 @@ export default function Page() {
       <div className="divide-y divide-gray-200 dark:divide-gray-700">
         <div className="space-y-2  pt-6 md:space-y-5">
           <h2 className="text-xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-2xl sm:leading-10 md:text-4xl md:leading-14">
-            EDUCATION
+            {resume.education.label}
           </h2>
         </div>
 
         <div className="space-y-2 pt-6 md:space-y-5">
           <div className="flex flex-col items-center justify-between md:grid-cols-3 md:flex-row">
-            <p className="text-base font-bold leading-7 md:text-lg ">{resume.education.degree}</p>
+            <p className="text-base font-bold leading-7 md:text-lg ">
+              {resume.education.datas.degree}
+            </p>
             <div className="flex space-x-2">
               <p className="text-lg font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-xl sm:leading-10 md:text-2xl md:leading-14">
-                {resume.education.school}
+                {resume.education.datas.school}
               </p>
             </div>
             <p className="text-sm font-bold leading-7 text-gray-500 dark:text-gray-400 md:text-lg">
-              {resume.education.date}
+              {resume.education.datas.date}
             </p>
           </div>
 
           <ul className="list-disc pl-8">
-            {resume.education.details.map((d) => (
+            {resume.education.datas.details.map((d) => (
               <li key={d.content}>
                 {d.content} (
                 <Link href={d.link}>
@@ -92,13 +94,13 @@ export default function Page() {
       <div className="divide-y divide-gray-200 dark:divide-gray-700">
         <div className="space-y-2  pt-6 md:space-y-5">
           <h2 className="text-xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-2xl sm:leading-10 md:text-4xl md:leading-14">
-            SKILLS
+            {resume.skills.label}
           </h2>
         </div>
 
         <div className="space-y-2 pt-6 md:space-y-5">
           <div className="flex  flex-col justify-between md:grid-cols-3 md:flex-row">
-            {resume.skills.map((s) => (
+            {resume.skills.datas.map((s) => (
               <div key={s.type} className="pb-2">
                 <p className="text-lg font-bold leading-7 ">{s.type}</p>
                 <ul className="list-disc pl-8">
