@@ -44,7 +44,7 @@ export const resume: Resume = {
         date: 'Oct 2021 - May 2025',
         tasks: [
           {
-            title: 'Web-based POS system',
+            title: 'POS system',
             descriptions: [
               'Served as the primary developer responsible for designing and implementing the POS system (Web/Mobile).',
               'Designed and implemented remote control functionality for POS peripheral devices.',
