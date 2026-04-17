@@ -25,10 +25,17 @@ interface Skill {
   items: string[]
 }
 
+interface SideProject {
+  name: string
+  link: string
+  description: string
+}
+
 interface Resume {
   employment: { label: string; datas: Employment[] }
   education: { label: string; datas: Education }
   skills: { label: string; datas: Skill[] }
+  sideprojects: { label: string; datas: SideProject[] }
   pdfLink: string
 }
 
@@ -46,17 +53,16 @@ export const resume: Resume = {
           {
             title: 'POS system',
             descriptions: [
-              'Served as the primary developer responsible for designing and implementing the POS system (Web/Mobile).',
-              'Designed and implemented remote control functionality for POS peripheral devices.',
-              'Designed and implemented third-party system integrations.',
-              'System Under Test: Analyze and implement the POS System test and improve test coverage.',
-              'Researched and implemented an AI assistant using RAG.',
+              'Built a POS system with remote peripheral device management.',
+              'Architected a third-party integration platform with concurrency control and retry infrastructure.',
+              'Built an AI-powered customer service assistant, reducing team training time by 30%.',
+              'Established a testing framework to improve development efficiency and POS system stability.',
             ],
           },
           {
             title: 'Shopee Smart Pickup Station',
             descriptions: [
-              'Designed and implemented the backend for the Smart Pickup Station system.',
+              'Delivered the backend for the Smart Pickup Station system.',
               'Optimized a database with tens of millions of records, improving query efficiency by 70%+.',
             ],
           },
@@ -72,16 +78,16 @@ export const resume: Resume = {
           {
             title: 'Middleware service between E-Commerce server and client',
             descriptions: [
-              'Designed and implemented middleware services using Node.js, Express, and MongoDB.',
-              'Build microservices with AWS (Lambda, SES, SQS, S3, API Gateway, etc.).',
-              'Design RESTful API and build a document of the implementation plan.',
+              'Developed middleware services with Node.js, Express, and MongoDB.',
+              'Deployed microservices on AWS (Lambda, SES, SQS, S3, API Gateway).',
+              'Authored RESTful API specifications and implementation documentation.',
             ],
           },
         ],
       },
       {
         company: 'Outo ',
-        companyZh: '探玩科技',
+        companyZh: '探玩科技股份有限公司',
         link: 'https://www.outo.co/',
         position: 'Software Engineer',
         date: 'Jan 2021 - Mar 2021',
@@ -89,8 +95,8 @@ export const resume: Resume = {
           {
             title: 'Outo outdoor activity platform',
             descriptions: [
-              'Designed and implemented the back-end server using TypeScript, Express, MySQL.',
-              'Build servers with AWS (EC2 , VPC, RDS).',
+              'Built the Outo web backend with TypeScript, Express, and MySQL.',
+              'Provisioned server infrastructure on AWS (EC2, VPC, RDS).',
             ],
           },
         ],
@@ -105,8 +111,8 @@ export const resume: Resume = {
           {
             title: 'Internal production line management system',
             descriptions: [
-              'Designed and implemented the front-end production line management system using Vue.js.',
-              'Responsible for timeline analysis, technical evaluations, introducing new technologies, and mentoring junior engineers.',
+              'Shipped the production line management system with Node.js and Vue.js.',
+              'Drove timeline analysis and technical evaluations; introduced new technologies and mentored junior engineers.',
             ],
           },
         ],
@@ -119,24 +125,12 @@ export const resume: Resume = {
         date: 'Dec 2015 - Jan 2020',
         tasks: [
           {
-            title: 'Jukebox Administration Website',
-            descriptions: ['Designed and implemented back-end website using React.js, GraphQL.'],
-          },
-          {
-            title: 'CNC(Computer Numerical Control):',
+            title: 'Mapacode',
             descriptions: [
-              'Designed and implemented a web HMI using React.js.',
-              'Maintained and implemented motion controller and algorithm (Rust language).',
-              'Integration of web HMI and motion controller.',
-              'Maintained the web HMI (Yahoo Mojito framework) and motion controller of a CNC system over 5 years old.',
-            ],
-          },
-          {
-            title: 'IoT system integration',
-            descriptions: [
-              'Designed and implemented data collection of peripheral sensors using Node.js.',
-              'Designed and implemented CNC monitoring with MTConnect protocol.',
-              'Using Modbus protocol to fetch data from sensors on ARM-based.',
+              'Jukebox Administration Website: Built the frontend with React.js and GraphQL.',
+              'Developed a CNC web HMI with React.js.',
+              'Maintained motion controller algorithms in Rust.',
+              'Engineered an IoT data collection system for peripheral sensors with Node.js, Modbus, and ARM-based hardware.',
             ],
           },
         ],
@@ -157,7 +151,7 @@ export const resume: Resume = {
           link: 'https://reurl.cc/j77NxD',
         },
         {
-          content: 'Refine the experimenting UGV platform with Linux-based (Raspberry Pi).',
+          content: 'Refine the experimental UGV platform with a Linux-based system (Raspberry Pi).',
           link: 'https://reurl.cc/72V8x9',
         },
       ],
@@ -169,18 +163,36 @@ export const resume: Resume = {
     datas: [
       {
         type: 'Programming Languages',
-        items: ['TypeScript/JavaScript', 'Flutter', 'Rust'],
+        items: ['TypeScript/JavaScript', 'Go', 'Python', 'Rust'],
       },
       {
         type: 'Technologies',
 
-        items: ['Node.js/Nest.js', 'React.js/Vue.js', 'MongoDB/SQL/Redis', 'RESTful API/WebSocket'],
+        items: [
+          'Nest.js/Node.js/Gin',
+          'React.js/Vue.js/Electron',
+          'MongoDB/PostgreSQL/Redis',
+          'RESTful API/WebSocket',
+        ],
       },
       {
-        type: 'Dev.Tools',
-        items: ['Git', 'Docker', 'GCP/AWS', 'Vim/tmux'],
+        type: 'Dev. Tools',
+        items: ['Docker/k8s', 'GCP/AWS', 'Jest', 'ELK'],
       },
     ],
   },
+
+  sideprojects: {
+    label: 'SIDE PROJECT',
+    datas: [
+      {
+        name: 'Subtitle',
+        link: 'https://github.com/alvisLu/Subtitle',
+        description:
+          'Real-time Voice Translation Desktop App. Built with Electron, React, and TypeScript. Captures mic and system audio, transcribes locally with Whisper, and delivers real-time translation via DeepL.',
+      },
+    ],
+  },
+
   pdfLink: 'https://drive.google.com/file/d/19CRW9iyKGltRNMslHVY-AXcARbuhFoLI/view?usp=sharing',
 }

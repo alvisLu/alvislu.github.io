@@ -113,6 +113,29 @@ export default function Page() {
           </div>
         </div>
       </div>
+
+      <div className="divide-y divide-gray-200 dark:divide-gray-700">
+        <div className="space-y-2  pt-6 md:space-y-5">
+          <h2 className="text-xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-2xl sm:leading-10 md:text-4xl md:leading-14">
+            {resume.sideprojects.label}
+          </h2>
+        </div>
+
+        <div className="space-y-2 pt-6">
+          {resume.sideprojects.datas.map((s) => (
+            <div key={s.name}>
+              <ul className="list-disc pl-8">
+                <li>
+                  <Link href={s.link} target="_blank" rel="noopener noreferrer">
+                    <span className="text-blue-500 dark:text-blue-300 ">{`${s.name}`}</span>
+                    <span>{` : ${s.description}`}</span>
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
     </>
   )
 }
