@@ -44,7 +44,7 @@ export default function Page() {
 
               {e.tasks.map((t) => (
                 <div key={t.title}>
-                  <p className="text-lg font-bold leading-7 ">{`${t.title}: `}</p>
+                  {t.title && <p className="text-lg font-bold leading-7 ">{`${t.title}: `}</p>}
                   <ul className="list-disc pl-8">
                     {t.descriptions.map((d) => (
                       <li key={d}>{d}</li>

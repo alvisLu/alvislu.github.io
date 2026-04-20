@@ -44,6 +44,22 @@ export const resume: Resume = {
     label: 'EMPLOYMENT',
     datas: [
       {
+        company: 'ZzzTech',
+        companyZh: '力力力科技',
+        link: '',
+        position: 'Freelance Software Engineer',
+        date: 'Jun 2025 - Present',
+        tasks: [
+          {
+            title: '',
+            descriptions: [
+              'Collaborated wioth a freelance studio, delivering contract projects for clients.',
+              'Architected and delivered full-lifecycle projects for clients, including a golf course operations portal, restaurant POS system, and hotel booking system.',
+            ],
+          },
+        ],
+      },
+      {
         company: 'Simpos',
         companyZh: '簡結科技',
         link: 'https://www.simpos.com.tw',
@@ -125,7 +141,7 @@ export const resume: Resume = {
         date: 'Dec 2015 - Jan 2020',
         tasks: [
           {
-            title: 'Mapacode',
+            title: '',
             descriptions: [
               'Jukebox Administration Website: Built the frontend with React.js and GraphQL.',
               'Developed a CNC web HMI with React.js.',
