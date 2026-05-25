@@ -164,11 +164,11 @@ export const resume: Resume = {
       details: [
         {
           content: 'Thesis: Intelligent Autonomous Vehicle with LiDAR Guidance',
-          link: 'https://reurl.cc/j77NxD',
+          link: 'https://reurl.cc/Wbo6Yk',
         },
         {
           content: 'Refine the experimental UGV platform with a Linux-based system (Raspberry Pi).',
-          link: 'https://reurl.cc/72V8x9',
+          link: 'https://reurl.cc/18W6L9',
         },
       ],
     },
